@@ -92,17 +92,19 @@ namespace ElevenNote.Services
             }
         }
 
-        /*public IHttpActionResult Put(NoteEdit note)
+        public bool DeleteNote(int noteId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            using (var ctx = new ApplicationDbContext())
+            {
+                var entity =
+                    ctx
+                        .Notes
+                        .Single(e => e.NoteId == noteId && e.OwnerId == _userId);
 
-            var service = CreateNoteService();
+                ctx.Notes.Remove(entity);
 
-            if (!service.UpdateNote(note))
-                return InternalServerError();
-
-            return Ok();
-        }*/
+                return ctx.SaveChanges() == 1;
+            }
+        }
     }
 }
